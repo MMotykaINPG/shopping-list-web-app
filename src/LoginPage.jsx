@@ -1,33 +1,86 @@
-import React from 'react'
-import {Grid, Button, TextField} from '@material-ui/core'
+import React, { useState } from "react";
+import { Grid, Button, TextField, CircularProgress } from "@material-ui/core";
+
+export const getFormValues = (form) =>
+  Array.from(form.elements).reduce(
+    (values, element) =>
+      element.name ? { ...values, [element.name]: element.value } : values,
+    {}
+  );
 
 const LoginPage = (props) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    return(
-        <Grid container>
-            <Grid item xs={3}/>
-            <Grid item container direction="column" alignItems="center" justify="center" xs={6}>
-                <Grid item xs={2}/>
-                <Grid item container direction="column" alignItems="center" spacing={2} xs={6}>
-                    <Grid item>
-                        <TextField label="Enter login..." color="primary" variant="filled"/>
-                    </Grid>
-                    <Grid item>
-                        <TextField label="Enter password..." color="primary" variant="filled" type="password"/>
-                    </Grid>
-                    <Grid item>
-                        <Button color="primary" variant="contained">SIGN IN</Button>
-                    </Grid>
-                    <Grid item>
-                        <Button color="secondary" variant="contained" onClick={props.onSignUpClick}>SIGN UP</Button>
-                    </Grid>
-                </Grid>
-                <Grid item xs={4}/>
-            </Grid>
-            <Grid item xs={3}/>
-        </Grid>
-    );
+  const send = (values) => {
+    console.log("sending", values);
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 3000);
+  };
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formValues = getFormValues(e.target);
+        setIsSubmitting(true);
+        send(formValues);
+      }}
+      style={{ height: "100%", width: "100%", paddingTop: "25%" }}
+    >
+      {isSubmitting ? (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "column",
+            alignItems: "center",
+            height: "100%",
+            gap: "15px",
+          }}
+        >
+          <TextField
+            autoFocus
+            required
+            name="login"
+            label="Login"
+            color="primary"
+            variant="filled"
+            autoComplete="username"
+          />
+          <TextField
+            name="password"
+            required
+            label="Password"
+            color="primary"
+            variant="filled"
+            type="password"
+            autoComplete="current-password"
+          />
+          <Button type="submit" color="primary" variant="contained">
+            SIGN IN
+          </Button>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={props.onSignUpClick}
+          >
+            SIGN UP
+          </Button>
+        </div>
+      )}
+    </form>
+  );
 };
 
 export default LoginPage;
-
