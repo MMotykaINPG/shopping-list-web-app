@@ -1,23 +1,16 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import LoginPage from './LoginPage'
+import RegisterPage from './RegisterPage';
 
 function App() {
+
+  const [currentPage, setCurrentPage] = React.useState("LoginPage");
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {currentPage==="LoginPage" && <LoginPage onSignUpClick={() => setCurrentPage("RegisterPage")}/>}
+      {currentPage==="RegisterPage" && <RegisterPage onBackClick={() => setCurrentPage("LoginPage")} />}
     </div>
   );
 }
