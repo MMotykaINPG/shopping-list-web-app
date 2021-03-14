@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Button, TextField, CircularProgress } from "@material-ui/core";
+import { Button, TextField, CircularProgress } from "@material-ui/core";
 
 export const getFormValues = (form) =>
   Array.from(form.elements).reduce(
@@ -26,7 +26,7 @@ const LoginPage = (props) => {
         setIsSubmitting(true);
         send(formValues);
       }}
-      style={{ height: "100%", width: "100%", paddingTop: "25%" }}
+      style={{ height: "100%", width: "100%", paddingTop: "25%", backgroundColor: "#4caf50"}}
     >
       {isSubmitting ? (
         <div
