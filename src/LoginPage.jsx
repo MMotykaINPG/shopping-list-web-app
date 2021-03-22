@@ -6,13 +6,14 @@ export const getFormValues = (form) =>
     (values, element) =>
       element.name ? { ...values, [element.name]: element.value } : values,
     {}
-  );
+  );  
 
 const LoginPage = (props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  
   const send = (values) => {
     console.log("sending", values);
+    props.onSignInClick(values);
     setTimeout(() => {
       setIsSubmitting(false);
     }, 3000);
@@ -73,8 +74,7 @@ const LoginPage = (props) => {
           <Button
             color="secondary"
             variant="contained"
-            onClick={props.onSignUpClick}
-          >
+            onClick={props.onSignUpClick}>
             SIGN UP
           </Button>
         </div>

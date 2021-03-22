@@ -13,10 +13,12 @@ const RegisterPage = (props) => {
 
   const send = (values) => {
     console.log("creating account", values);
+    props.onSignUpClick(values);
     setTimeout(() => {
       setIsSubmitting(false);
     }, 3000);
   };
+  
   const validateValues = ({ password, passwordConfirmation }) => {
     if (password.length < 8) {
       return "password must be at least 8 chars long";
