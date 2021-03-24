@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Button, TextField, CircularProgress } from "@material-ui/core";
+import { Button, TextField, CircularProgress } from "@material-ui/core";
 
 export const getFormValues = (form) =>
   Array.from(form.elements).reduce(
@@ -13,10 +13,12 @@ const RegisterPage = (props) => {
 
   const send = (values) => {
     console.log("creating account", values);
+    props.onSignUpClick(values);
     setTimeout(() => {
       setIsSubmitting(false);
     }, 3000);
   };
+  
   const validateValues = ({ password, passwordConfirmation }) => {
     if (password.length < 8) {
       return "password must be at least 8 chars long";
@@ -40,7 +42,7 @@ const RegisterPage = (props) => {
         setIsSubmitting(true);
         send(formValues);
       }}
-      style={{ height: "100%", width: "100%", paddingTop: "25%" }}
+      style={{ height: "100%", width: "100%", paddingTop: "25%", backgroundColor: "#4caf50" }}
     >
       {isSubmitting ? (
         <div

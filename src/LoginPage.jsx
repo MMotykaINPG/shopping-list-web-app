@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import { Grid, Button, TextField, CircularProgress } from "@material-ui/core";
+import { Button, TextField, CircularProgress } from "@material-ui/core";
 
 export const getFormValues = (form) =>
   Array.from(form.elements).reduce(
     (values, element) =>
       element.name ? { ...values, [element.name]: element.value } : values,
     {}
-  );
+  );  
 
 const LoginPage = (props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  
   const send = (values) => {
     console.log("sending", values);
+    props.onSignInClick(values);
     setTimeout(() => {
       setIsSubmitting(false);
     }, 3000);
@@ -26,7 +27,7 @@ const LoginPage = (props) => {
         setIsSubmitting(true);
         send(formValues);
       }}
-      style={{ height: "100%", width: "100%", paddingTop: "25%" }}
+      style={{ height: "100%", width: "100%", paddingTop: "25%", backgroundColor: "#4caf50"}}
     >
       {isSubmitting ? (
         <div
@@ -73,8 +74,7 @@ const LoginPage = (props) => {
           <Button
             color="secondary"
             variant="contained"
-            onClick={props.onSignUpClick}
-          >
+            onClick={props.onSignUpClick}>
             SIGN UP
           </Button>
         </div>
