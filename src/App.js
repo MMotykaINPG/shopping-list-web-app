@@ -54,13 +54,12 @@ function App() {
         'Content-Type': 'application/json'
       },
         body: JSON.stringify({
-          "username": values.login,
-          "password": values.password,
-          "password2": values.passwordConfirmation,
-          "email": "aaaaa@bbbbb.com"
+          'username': values.login,
+          'password': values.password,
+          'password2': values.passwordConfirmation
           })
       } 
-
+    console.log("creating account", options);
     var apiResponseStatus;
     var apiResponse = await fetch(addr+'/auth/register/', options).then((response) => 
     {
