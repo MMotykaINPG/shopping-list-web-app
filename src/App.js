@@ -56,7 +56,10 @@ function App() {
         body: JSON.stringify({
           'username': values.login,
           'password': values.password,
-          'password2': values.passwordConfirmation
+          'password2': values.passwordConfirmation,
+          'first_name': "",
+          'last_name': "",
+          'email': ""
           })
       } 
     console.log("creating account", options);
