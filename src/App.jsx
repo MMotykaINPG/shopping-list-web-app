@@ -40,6 +40,13 @@ function App() {
       setRefreshToken(apiResponse.refresh);
       setCurrentPage("MainMenu");
     }
+    else if (apiResponseStatus === 401)
+    {
+      alert(Object.values(apiResponse).flat().join("\n"));
+    } else {
+      console.log(apiResponseStatus);
+    }
+
   };
 
   const SignUpClick = async (values) => {
