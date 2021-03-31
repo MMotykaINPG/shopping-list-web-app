@@ -34,7 +34,7 @@ function App() {
       }
     );
 
-    if (apiResponseStatus === "200") {
+    if (apiResponseStatus === 200) {
       setUserName(values.login);
       setAccessToken(apiResponse.access);
       setRefreshToken(apiResponse.refresh);
