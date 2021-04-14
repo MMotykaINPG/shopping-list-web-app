@@ -12,8 +12,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  ListItem,
+  TextField,
+  ListItemSecondaryAction,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import AddIcon from "@material-ui/icons/Add";
 import ListLabel from "./ListLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
@@ -28,11 +32,22 @@ const useStyles = makeStyles((theme) => ({
   deleteIcon: {
     color: "white",
   },
+  item: {
+    border: "1px solid #4791db",
+    borderRadius: "15px",
+    margin: "5px 0 15px 0",
+    background: "lightgray",
+    "&:hover": {
+      background: "#4791db",
+      cursor: "pointer",
+    },
+  },
 }));
 
 const MainMenu = (props) => {
-  const { username, onLogoutClick } = props;
+  const { username, onLogoutClick, shoppingLists, onLabelClick, onAddNewListClick, onListDeleteClick } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [newListName, setNewListName] = React.useState("");
   const classes = useStyles();
 
   const handleClickOpen = () => {
@@ -47,7 +62,7 @@ const MainMenu = (props) => {
     setOpenDialog(false);
   };
 
-  const testLists = ["AAA", "BBB", "CCC", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"];
+  //const testLists = ["AAA", "BBB", "CCC", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"];
   return (
     <div
       style={{
@@ -80,10 +95,20 @@ const MainMenu = (props) => {
           paddingTop: "5%",
         }}
       >
+
         <List variant="" className={classes.list}>
-          {testLists.map((value) => (
-            <ListLabel listName={value} />
-          ))}
+        <ListItem className={classes.item}>
+            {/* <ListItemText primary={listName} className={classes.label}/> */}
+            <TextField label="Add list..." onChange={(event) => {setNewListName(event.target.value)}}/>
+            <ListItemSecondaryAction>
+              <IconButton edge="end" aria-label="delete">
+                <AddIcon onClick={() => onAddNewListClick(newListName)}/>
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          {shoppingLists.length > 0 ? shoppingLists.map((value) => (
+            <ListLabel listName={value.name} key={value.id} onLabelClick={() => onLabelClick(value.id)} onListDeleteClick={() => onListDeleteClick(value.id)}/>
+          )):<div/>}
         </List>
       </div>
       <Dialog open={openDialog} onClose={handleCloseCanceled}>
