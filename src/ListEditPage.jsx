@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   List,
   AppBar,
@@ -13,12 +13,15 @@ import {
   Avatar,
   ListItemSecondaryAction,
   ListItemText,
+  CircularProgress,
 } from "@material-ui/core";
+import axios from "axios";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from "@material-ui/styles";
 import ItemLabel from "./ItemLabel";
 import ArrowBack from "@material-ui/icons/ArrowBack";
+import { useQuery } from "react-query";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -49,10 +52,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getListItems = (id) =>
+  axios.get(`https://shop-app-list.herokuapp.com/items/?id=${id}`);
+
 const ListEditPage = (props) => {
-  const { username, listName } = props;
+  const { username, listId, listName } = props;
   const classes = useStyles();
-  const testLists = ["item1", "item2", "item3", "iteeeeeeeeeem4"];
+
+  const { data, error, isLoading } = useQuery(
+    ["list-items", props.listId],
+    () => getListItems(listId)
+  );
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "limegreen",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <Typography color="error">Error</Typography>;
+  }
+
+  const { data: items } = data;
+
   return (
     <div
       style={{
@@ -99,8 +132,10 @@ const ListEditPage = (props) => {
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
-          {testLists.map((value) => (
-            <ItemLabel listName={value} />
+          {items.map(({ id, name, owner: ownerId }) => (
+            <Fragment key={id}>
+              <ItemLabel listName={name} />
+            </Fragment>
           ))}
         </List>
       </div>

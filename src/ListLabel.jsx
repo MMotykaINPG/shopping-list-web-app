@@ -30,7 +30,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListLabel = (props) => {
-  const { listName, onLabelClick, onListDeleteClick } = props;
+  const {
+    listName,
+    onLabelClick,
+    onListDeleteClick,
+    id,
+    onListNameEditClick,
+  } = props;
   const classes = useStyles();
   return (
     <ListItem className={classes.item} onClick={onLabelClick}>
@@ -41,7 +47,7 @@ const ListLabel = (props) => {
       </ListItemAvatar>
       <ListItemText primary={listName} className={classes.label} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="edit">
+        <IconButton edge="end" aria-label="edit" onClick={onListNameEditClick}>
           <EditIcon />
         </IconButton>
         <IconButton edge="end" aria-label="delete" onClick={onListDeleteClick}>

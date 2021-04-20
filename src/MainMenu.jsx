@@ -45,7 +45,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MainMenu = (props) => {
-  const { username, onLogoutClick, shoppingLists, onLabelClick, onAddNewListClick, onListDeleteClick } = props;
+  const {
+    username,
+    onLogoutClick,
+    shoppingLists,
+    onLabelClick,
+    onAddNewListClick,
+    onListDeleteClick,
+    onListNameEdited,
+  } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [newListName, setNewListName] = React.useState("");
   const classes = useStyles();
@@ -95,20 +103,35 @@ const MainMenu = (props) => {
           paddingTop: "5%",
         }}
       >
-
         <List variant="" className={classes.list}>
-        <ListItem className={classes.item}>
+          <ListItem className={classes.item}>
             {/* <ListItemText primary={listName} className={classes.label}/> */}
-            <TextField label="Add list..." onChange={(event) => {setNewListName(event.target.value)}}/>
+            <TextField
+              label="Add list..."
+              onChange={(event) => {
+                setNewListName(event.target.value);
+              }}
+            />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="delete">
-                <AddIcon onClick={() => onAddNewListClick(newListName)}/>
+                <AddIcon onClick={() => onAddNewListClick(newListName)} />
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
-          {shoppingLists.length > 0 ? shoppingLists.map((value) => (
-            <ListLabel listName={value.name} key={value.id} onLabelClick={() => onLabelClick(value.id)} onListDeleteClick={() => onListDeleteClick(value.id)}/>
-          )):<div/>}
+          {shoppingLists.map((value) => {
+            return (
+              <ListLabel
+                listName={value.name}
+                key={value.id}
+                onLabelClick={() => onLabelClick(value.id)}
+                onListDeleteClick={() => onListDeleteClick(value.id)}
+                onListNameEditClick={() => {
+                  const newName = prompt("new name?");
+                  onListNameEdited(value.id, newName);
+                }}
+              />
+            );
+          })}
         </List>
       </div>
       <Dialog open={openDialog} onClose={handleCloseCanceled}>

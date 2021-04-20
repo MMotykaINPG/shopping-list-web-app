@@ -7,24 +7,22 @@ import ListEditPage from "./ListEditPage";
 
 const addr = "https://shop-app-list.herokuapp.com";
 
-
-
 function App() {
   const [currentPage, setCurrentPage] = React.useState("LoginPage");
   const [userName, setUserName] = React.useState("");
-  const [userID, setUserID] = React.useState("");
+  const [userID, setUserID] = React.useState("4");
   const [refreshToken, setRefreshToken] = React.useState("");
   const [accessToken, setAccessToken] = React.useState("");
-  const [openedListName, setOpenedListName] = React.useState("");
-  const [shoppingLists, setShoppingLists] = React.useState("");
-
+  const [openedListId, setOpenedListId] = React.useState(null);
+  const [shoppingLists, setShoppingLists] = React.useState([]);
+  const [editedListId, setEditedListId] = React.useState(null);
 
   const GetUserLists = async (ID) => {
-    console.log(ID);
-    var lists = await fetch(addr+'/shopping-lists/?owner='+ID).then((response) => response.json());
+    var lists = await fetch(
+      addr + "/shopping-lists/?owner=" + ID
+    ).then((response) => response.json());
 
     lists.length === 0 ? setShoppingLists("") : setShoppingLists(lists);
-
   };
 
   const SignInClick = async (values) => {
@@ -49,21 +47,17 @@ function App() {
     );
 
     if (apiResponseStatus === 200) {
-      console.log(apiResponse,values)
       setUserName(values.login);
       setAccessToken(apiResponse.access);
       setRefreshToken(apiResponse.refresh);
       setUserID(apiResponse.id);
       GetUserLists(apiResponse.id);
       setCurrentPage("MainMenu");
-    }
-    else if (apiResponseStatus === 401)
-    {
+    } else if (apiResponseStatus === 401) {
       alert(Object.values(apiResponse).flat().join("\n"));
     } else {
       console.log(apiResponseStatus);
     }
-
   };
 
   const SignUpClick = async (values) => {
@@ -110,18 +104,16 @@ function App() {
     setAccessToken("");
     setRefreshToken("");
     setCurrentPage("LoginPage");
-  }
+  };
 
-  const ListLabelClick = async (values) => {
-    console.log(values)
-    setOpenedListName(shoppingLists[values-1].name);
+  const ListLabelClick = (listId) => {
     setCurrentPage("ListEditPage");
-  }
+    setOpenedListId(listId);
+  };
 
   const AddNewList = async (values) => {
     console.log(values);
-    if(values=="")
-      return;
+    if (values == "") return;
     const options = {
       method: "post",
       headers: {
@@ -130,7 +122,7 @@ function App() {
       },
       body: JSON.stringify({
         name: values,
-        owner: userID
+        owner: userID,
       }),
     };
     console.log("adding list", options);
@@ -144,21 +136,48 @@ function App() {
 
     if (apiResponseStatus === 201) {
       GetUserLists(userID);
-    } 
-  }
+    }
+  };
+
+  const EditListName = async (listId, newName) => {
+    const options = {
+      method: "put",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: newName,
+        owner: userID,
+      }),
+    };
+    console.log("adding list", options);
+    var apiResponseStatus;
+    var apiResponse = await fetch(
+      addr + `/shopping-lists/edit/${listId}`,
+      options
+    ).then((response) => {
+      apiResponseStatus = response.status;
+      return response.json();
+    });
+
+    if (apiResponseStatus === 200) {
+      GetUserLists(userID);
+    }
+  };
 
   const DeleteList = async (values) => {
     console.log(values);
-    const options = { 
-      method: 'delete',
+    const options = {
+      method: "delete",
       headers: {
-        'Accept': 'application/json, text/plain, */*',
-      }
-    } 
+        Accept: "application/json, text/plain, */*",
+      },
+    };
 
-    await fetch(addr+'/shopping-lists/'+values+"/", options)
+    await fetch(addr + "/shopping-lists/" + values + "/", options);
     GetUserLists(userID);
-  }
+  };
   return (
     <div className="App">
       {currentPage === "LoginPage" && (
@@ -174,18 +193,24 @@ function App() {
         />
       )}
       {currentPage === "MainMenu" && (
-        <MainMenu username={userName} 
-          onLogoutClick={() => LogoutClick()} 
+        <MainMenu
+          username={userName}
+          editedListId={editedListId}
+          onLogoutClick={() => LogoutClick()}
           shoppingLists={shoppingLists}
-          onLabelClick={(values) => ListLabelClick(values)}
+          onLabelClick={ListLabelClick}
           onAddNewListClick={(values) => AddNewList(values)}
-          onListDeleteClick={(values) => DeleteList(values)}/>
+          onListDeleteClick={(values) => DeleteList(values)}
+          onListNameEdited={EditListName}
+        />
       )}
       {currentPage === "ListEditPage" && (
         <ListEditPage
           username={userName}
-          listName={openedListName}
+          listId={openedListId}
           onBackClick={() => setCurrentPage("MainMenu")}
+          userId={userID}
+          listName={shoppingLists.find(({ id }) => openedListId === id)?.name}
         />
       )}
     </div>
