@@ -52,7 +52,8 @@ function App() {
       setRefreshToken(apiResponse.refresh);
       setUserID(apiResponse.id);
       GetUserLists(apiResponse.id);
-      setCurrentPage("MainMenu");
+      setTimeout(() => {  setCurrentPage("MainMenu"); }, 1000);
+      
     } else if (apiResponseStatus === 401) {
       alert(Object.values(apiResponse).flat().join("\n"));
     } else {
@@ -178,6 +179,27 @@ function App() {
     await fetch(addr + "/shopping-lists/" + values + "/", options);
     GetUserLists(userID);
   };
+
+const DeleteAccount = async () =>{
+  console.log('del');
+
+  const options = {
+    method: "delete",
+    headers: {
+      Accept: "application/json, text/plain, */*",
+    },
+  };
+
+  await fetch(addr + "/auth/delete/" + userID, options);
+  setCurrentPage("LoginPage");
+  setUserName("");
+  setShoppingLists("");
+  setUserID("");
+  setAccessToken("");
+  setRefreshToken("");
+    
+}
+
   return (
     <div className="App">
       {currentPage === "LoginPage" && (
@@ -202,6 +224,7 @@ function App() {
           onAddNewListClick={(values) => AddNewList(values)}
           onListDeleteClick={(values) => DeleteList(values)}
           onListNameEdited={EditListName}
+          onAccountDeleteClick={DeleteAccount}
         />
       )}
       {currentPage === "ListEditPage" && (

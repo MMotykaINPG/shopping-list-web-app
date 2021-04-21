@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const getListItems = (id) =>
-  axios.get(`https://shop-app-list.herokuapp.com/items/?id=${id}`);
+  axios.get(`https://shop-app-list.herokuapp.com/items/?shopping_list=${id}`);
 
 const ListEditPage = (props) => {
   const { username, listId, listName } = props;
@@ -72,7 +72,7 @@ const ListEditPage = (props) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "limegreen",
+          background: "4caf50",
         }}
       >
         <CircularProgress />
@@ -109,7 +109,7 @@ const ListEditPage = (props) => {
           <Typography variant="h6" className={classes.title}>
             {"Editing: " + listName}
           </Typography>
-          <Button color="inherit">LOGOUT</Button>
+          {/* <Button color="inherit">LOGOUT</Button> */}
         </Toolbar>
       </AppBar>
       <div

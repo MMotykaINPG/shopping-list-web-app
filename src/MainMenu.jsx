@@ -53,6 +53,7 @@ const MainMenu = (props) => {
     onAddNewListClick,
     onListDeleteClick,
     onListNameEdited,
+    onAccountDeleteClick,
   } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [newListName, setNewListName] = React.useState("");
@@ -68,6 +69,8 @@ const MainMenu = (props) => {
 
   const handleCloseAccepted = () => {
     setOpenDialog(false);
+    console.log('del');
+    onAccountDeleteClick();
   };
 
   //const testLists = ["AAA", "BBB", "CCC", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"];
@@ -104,6 +107,7 @@ const MainMenu = (props) => {
         }}
       >
         <List variant="" className={classes.list}>
+          
           <ListItem className={classes.item}>
             {/* <ListItemText primary={listName} className={classes.label}/> */}
             <TextField
