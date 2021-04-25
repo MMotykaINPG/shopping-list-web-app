@@ -130,7 +130,8 @@ const MainMenu = (props) => {
                 onLabelClick={() => onLabelClick(value.id)}
                 onListDeleteClick={() => onListDeleteClick(value.id)}
                 onListNameEditClick={() => {
-                  const newName = prompt("new name?");
+                  console.log(value.name);
+                  const newName = prompt("new name?", value.name);
                   onListNameEdited(value.id, newName);
                 }}
               />

@@ -200,6 +200,39 @@ const DeleteAccount = async () =>{
     
 }
 
+const AddNewItem = async (values) => {
+  console.log(values);
+
+    if (values == "") return;
+
+    const options = {
+      method: "post",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: values,
+        content: values,
+        shopping_list: openedListId,
+        is_bought: false
+      }),
+    };
+    console.log("addding item", options);
+    var apiResponseStatus;
+    var apiResponse = await fetch(addr + "/items/", options).then(
+      (response) => {
+        apiResponseStatus = response.status;
+        return response.json();
+      }
+    );
+
+    if (apiResponseStatus === 201) {
+      setOpenedListId("");
+      setOpenedListId(openedListId);
+    }
+}
+
   return (
     <div className="App">
       {currentPage === "LoginPage" && (
@@ -231,9 +264,10 @@ const DeleteAccount = async () =>{
         <ListEditPage
           username={userName}
           listId={openedListId}
-          onBackClick={() => setCurrentPage("MainMenu")}
+          onBackClick={() => {setCurrentPage("MainMenu"); setOpenedListId("");}}
           userId={userID}
           listName={shoppingLists.find(({ id }) => openedListId === id)?.name}
+          onAddNewItemClick={(values) => AddNewItem(values)}
         />
       )}
     </div>

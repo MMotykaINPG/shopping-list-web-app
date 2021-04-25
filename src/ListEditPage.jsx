@@ -56,7 +56,8 @@ const getListItems = (id) =>
   axios.get(`https://shop-app-list.herokuapp.com/items/?shopping_list=${id}`);
 
 const ListEditPage = (props) => {
-  const { username, listId, listName } = props;
+  const { username, listId, listName, onAddNewItemClick} = props;
+  const [newItemName, setNewItemName] = React.useState("");
   const classes = useStyles();
 
   const { data, error, isLoading } = useQuery(
@@ -125,16 +126,19 @@ const ListEditPage = (props) => {
         <List variant="" className={classes.list}>
           <ListItem className={classes.item}>
             {/* <ListItemText primary={listName} className={classes.label}/> */}
-            <TextField label="Add item..." />
+            <TextField label="Add item..." 
+            onChange={(event) => {
+              setNewItemName(event.target.value);
+            }}/>
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="delete">
-                <AddIcon />
+                <AddIcon onClick={() => onAddNewItemClick(newItemName)}/>
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
           {items.map(({ id, name, owner: ownerId }) => (
             <Fragment key={id}>
-              <ItemLabel listName={name} />
+              <ItemLabel listName={name} key={id} />
             </Fragment>
           ))}
         </List>
