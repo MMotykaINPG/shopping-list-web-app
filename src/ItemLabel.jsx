@@ -29,16 +29,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListLabel = (props) => {
-  const { listName } = props;
+  const { listName, onBackfaceClick, crossed } = props;
   const classes = useStyles();
   return (
-    <ListItem className={classes.item}>
+    <ListItem className={classes.item} onClick={onBackfaceClick}>
       <ListItemAvatar>
         <Avatar>
           <ShoppingCartIcon />
         </Avatar>
       </ListItemAvatar>
-      <ListItemText primary={listName} className={classes.label} />
+      <ListItemText
+        style={crossed ? { textDecoration: "line-through" } : {}}
+        primary={listName}
+        className={classes.label}
+      />
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="edit">
           <EditIcon />

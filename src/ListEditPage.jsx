@@ -23,6 +23,8 @@ import ItemLabel from "./ItemLabel";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { useQuery } from "react-query";
 
+const isBought = (item) => item.is_bought;
+
 const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
@@ -59,9 +61,9 @@ const ListEditPage = (props) => {
   const { username, listId, listName } = props;
   const classes = useStyles();
 
-  const { data, error, isLoading } = useQuery(
+  const { data, error, isLoading, refetch } = useQuery(
     ["list-items", props.listId],
-    () => getListItems(listId)
+    () => getListItems("4")
   );
 
   if (isLoading) {
@@ -85,6 +87,28 @@ const ListEditPage = (props) => {
   }
 
   const { data: items } = data;
+
+  const updateItemIsBought = async (itemId, isBought, fullItemData) => {
+    try {
+      await axios.put(
+        `https://shop-app-list.herokuapp.com/items/?id=${itemId}`,
+        {
+          ...fullItemData,
+          is_bought: isBought,
+        }
+      );
+    } catch (e) {
+      // noop
+    }
+  };
+
+  const onItemBackfaceClick = async (itemId) => {
+    const item = items.find(({ id }) => id === itemId);
+    await (isBought(item)
+      ? updateItemIsBought(itemId, false, item)
+      : updateItemIsBought(itemId, true, item));
+    refetch();
+  };
 
   return (
     <div
@@ -132,9 +156,16 @@ const ListEditPage = (props) => {
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
-          {items.map(({ id, name, owner: ownerId }) => (
+          {Items.map(({ id, name, owner: ownerId, is_bought }) => (
             <Fragment key={id}>
-              <ItemLabel listName={name} />
+              <ItemLabel
+                crossed={
+                  (is_bought && !uncrossedItemIds.includes(id)) ||
+                  crossedItemIds.includes(id)
+                }
+                onBackfaceClick={() => onItemBackfaceClick(id)}
+                listName={name}
+              />
             </Fragment>
           ))}
         </List>
