@@ -70,7 +70,7 @@ const ListEditPage = (props) => {
 
   const { data, error, isLoading, refetch } = useQuery(
     ["list-items", props.listId],
-    () => getListItems("4")
+    () => getListItems(props.listId)
   );
 
   if (isLoading) {
@@ -97,15 +97,12 @@ const ListEditPage = (props) => {
 
   const updateItemIsBought = async (itemId, isBought, fullItemData) => {
     try {
-      await axios.put(
-        `https://shop-app-list.herokuapp.com/items/?id=${itemId}`,
-        {
-          ...fullItemData,
-          is_bought: isBought,
-        }
-      );
+      await axios.put(`https://shop-app-list.herokuapp.com/items/${itemId}/`, {
+        ...fullItemData,
+        is_bought: isBought,
+      });
     } catch (e) {
-      // noop
+      console.error(e);
     }
   };
 
