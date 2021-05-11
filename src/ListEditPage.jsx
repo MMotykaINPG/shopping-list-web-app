@@ -58,7 +58,14 @@ const getListItems = (id) =>
   axios.get(`https://shop-app-list.herokuapp.com/items/?shopping_list=${id}`);
 
 const ListEditPage = (props) => {
-  const { username, listId, listName } = props;
+  const {
+    username,
+    listId,
+    listName,
+    onAddNewItemClick,
+    onDeleteItemClick,
+  } = props;
+  const [newItemName, setNewItemName] = React.useState("");
   const classes = useStyles();
 
   const { data, error, isLoading, refetch } = useQuery(
@@ -149,20 +156,23 @@ const ListEditPage = (props) => {
         <List variant="" className={classes.list}>
           <ListItem className={classes.item}>
             {/* <ListItemText primary={listName} className={classes.label}/> */}
-            <TextField label="Add item..." />
+            <TextField
+              label="Add item..."
+              onChange={(event) => {
+                setNewItemName(event.target.value);
+              }}
+            />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="delete">
-                <AddIcon />
+                <AddIcon onClick={() => onAddNewItemClick(newItemName)} />
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
-          {Items.map(({ id, name, owner: ownerId, is_bought }) => (
+          {items.map(({ id, name, owner: ownerId, is_bought }) => (
             <Fragment key={id}>
               <ItemLabel
-                crossed={
-                  (is_bought && !uncrossedItemIds.includes(id)) ||
-                  crossedItemIds.includes(id)
-                }
+                onDeleteItemClick={() => onDeleteItemClick(id)}
+                crossed={is_bought}
                 onBackfaceClick={() => onItemBackfaceClick(id)}
                 listName={name}
               />

@@ -181,6 +181,21 @@ function App() {
     GetUserLists(userID);
   };
 
+  const DeleteItem = async (values) => {
+    console.log(values);
+    const options = {
+      method: "delete",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    };
+
+    await fetch(addr + "/items/" + values + "/", options);
+    var temp = openedListId;
+    setOpenedListId("");
+    setOpenedListId(temp);
+  };
+
   const DeleteAccount = async () => {
     console.log("del");
 
@@ -198,6 +213,39 @@ function App() {
     setUserID("");
     setAccessToken("");
     setRefreshToken("");
+  };
+
+  const AddNewItem = async (values) => {
+    console.log(values);
+
+    if (values == "") return;
+
+    const options = {
+      method: "post",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: values,
+        content: values,
+        shopping_list: openedListId,
+        is_bought: false,
+      }),
+    };
+    console.log("addding item", options);
+    var apiResponseStatus;
+    var apiResponse = await fetch(addr + "/items/", options).then(
+      (response) => {
+        apiResponseStatus = response.status;
+        return response.json();
+      }
+    );
+
+    if (apiResponseStatus === 201) {
+      setOpenedListId("");
+      setOpenedListId(openedListId);
+    }
   };
 
   return (
@@ -231,9 +279,14 @@ function App() {
         <ListEditPage
           username={userName}
           listId={openedListId}
-          onBackClick={() => setCurrentPage("MainMenu")}
+          onBackClick={() => {
+            setCurrentPage("MainMenu");
+            setOpenedListId("");
+          }}
           userId={userID}
           listName={shoppingLists.find(({ id }) => openedListId === id)?.name}
+          onAddNewItemClick={(values) => AddNewItem(values)}
+          onDeleteItemClick={(values) => DeleteItem(values)}
         />
       )}
     </div>
