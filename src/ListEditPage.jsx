@@ -56,7 +56,7 @@ const getListItems = (id) =>
   axios.get(`https://shop-app-list.herokuapp.com/items/?shopping_list=${id}`);
 
 const ListEditPage = (props) => {
-  const { username, listId, listName, onAddNewItemClick} = props;
+  const { username, listId, listName, onAddNewItemClick, onDeleteItemClick} = props;
   const [newItemName, setNewItemName] = React.useState("");
   const classes = useStyles();
 
@@ -138,7 +138,7 @@ const ListEditPage = (props) => {
           </ListItem>
           {items.map(({ id, name, owner: ownerId }) => (
             <Fragment key={id}>
-              <ItemLabel listName={name} key={id} />
+              <ItemLabel listName={name} key={id} onDeleteItemClick={() => onDeleteItemClick(id)} />
             </Fragment>
           ))}
         </List>

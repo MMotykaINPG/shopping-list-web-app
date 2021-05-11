@@ -180,6 +180,21 @@ function App() {
     GetUserLists(userID);
   };
 
+  const DeleteItem = async (values) => {
+    console.log(values);
+    const options = {
+      method: "delete",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    };
+
+    await fetch(addr + "/items/" + values + "/", options);
+    var temp = openedListId;
+    setOpenedListId("");
+    setOpenedListId(temp);
+  };
+
 const DeleteAccount = async () =>{
   console.log('del');
 
@@ -268,6 +283,7 @@ const AddNewItem = async (values) => {
           userId={userID}
           listName={shoppingLists.find(({ id }) => openedListId === id)?.name}
           onAddNewItemClick={(values) => AddNewItem(values)}
+          onDeleteItemClick={(values) => DeleteItem(values)}
         />
       )}
     </div>
