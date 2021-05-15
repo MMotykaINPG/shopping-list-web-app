@@ -54,8 +54,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getListItems = (id) =>
-  axios.get(`https://shop-app-list.herokuapp.com/items/?shopping_list=${id}`);
+const getListItems = async (id) =>
+{
+   const a = await axios.get(`https://shop-app-list.herokuapp.com/items/?shopping_list=${id}`);
+   a.data.sort((i1, i2) => i1.is_bought == true ? 1 : -1);
+   return a;
+}
+
 
 const ListEditPage = (props) => {
   const {
@@ -111,7 +116,7 @@ const ListEditPage = (props) => {
     await (isBought(item)
       ? updateItemIsBought(itemId, false, item)
       : updateItemIsBought(itemId, true, item));
-    refetch();
+    await refetch();
   };
 
   return (
