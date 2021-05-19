@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListLabel = (props) => {
-  const { listName, onBackfaceClick, crossed, key, onDeleteItemClick } = props;
+const ItemLabel = (props) => {
+  const { listName, onBackfaceClick, crossed, key, onDeleteItemClick, onItemEditClick } = props;
   const classes = useStyles();
   return (
     <ListItem className={classes.item} onClick={onBackfaceClick}>
@@ -44,7 +44,7 @@ const ListLabel = (props) => {
         className={classes.label}
       />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="edit">
+        <IconButton edge="end" aria-label="edit" onClick={onItemEditClick}>
           <EditIcon />
         </IconButton>
         <IconButton edge="end" aria-label="delete" onClick={onDeleteItemClick}>
@@ -55,4 +55,4 @@ const ListLabel = (props) => {
   );
 };
 
-export default ListLabel;
+export default ItemLabel;

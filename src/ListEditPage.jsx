@@ -69,6 +69,7 @@ const ListEditPage = (props) => {
     listName,
     onAddNewItemClick,
     onDeleteItemClick,
+    onItemNameEdited,
   } = props;
   const [newItemName, setNewItemName] = React.useState("");
   const classes = useStyles();
@@ -170,13 +171,19 @@ const ListEditPage = (props) => {
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
-          {items.map(({ id, name, owner: ownerId, is_bought }) => (
+          {items.map(({ id, name, content, shopping_list, is_bought }) => (
             <Fragment key={id}>
               <ItemLabel
                 onDeleteItemClick={() => onDeleteItemClick(id)}
                 crossed={is_bought}
                 onBackfaceClick={() => onItemBackfaceClick(id)}
                 listName={name}
+                onItemEditClick={() => {
+                  console.log(name);
+                  const newName = prompt("new name?", name);
+                  console.log(newName);
+                  onItemNameEdited(id, newName, content, shopping_list, is_bought);
+                }}
               />
             </Fragment>
           ))}

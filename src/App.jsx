@@ -248,6 +248,41 @@ function App() {
     }
   };
 
+  const EditItemName = async (id, newName, content, shopping_list, is_bought) => {
+    if(newName == null)
+      return
+    const options = {
+      method: "put",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        name: newName,
+        content: newName,
+        shopping_list: shopping_list,
+        is_bought: is_bought
+      }),
+    };
+    console.log("editing item", options);
+    var apiResponseStatus;
+    var apiResponse = await fetch(
+      addr + `/items/${id}/`,
+      options
+    ).then((response) => {
+      apiResponseStatus = response.status;
+      return response.json();
+    });
+
+    console.log(apiResponse);
+    if (apiResponseStatus === 200) {
+      var temp = openedListId;
+      setOpenedListId("");
+      setOpenedListId(temp);
+    }
+  };
+
   return (
     <div className="App">
       {currentPage === "LoginPage" && (
@@ -287,6 +322,7 @@ function App() {
           listName={shoppingLists.find(({ id }) => openedListId === id)?.name}
           onAddNewItemClick={(values) => AddNewItem(values)}
           onDeleteItemClick={(values) => DeleteItem(values)}
+          onItemNameEdited={(id, newName, content, shopping_list, is_bought) => EditItemName(id, newName, content, shopping_list, is_bought)}
         />
       )}
     </div>
