@@ -122,7 +122,7 @@ const MainMenu = (props) => {
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
-          {shoppingLists.map((value) => {
+          {(shoppingLists.length === 0) ? null : shoppingLists.map((value) => {
             return (
               <ListLabel
                 listName={value.name}
